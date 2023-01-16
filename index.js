@@ -107,7 +107,7 @@ app.post('/api/user/login', (req, res) =>
                         if (err) { throw err }
                         res
                         .status(200)
-                        .cookie('cookie.sid', token)
+                        .cookie('connect.sid', token)
                         .json({ success: true, token});
                     }
                 );            
