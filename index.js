@@ -27,6 +27,16 @@ app.get('/api/user/list', (req, res) =>
 
 app.post('/api/user/register', (req, res) =>
 {
+    const authHeader = req.headers;
+    const token = authHeader.cookie;
+
+    if (!token)
+    {
+        res
+        .redirect('/')
+        .end();
+    }
+
     const username = req.body.username;
     const password = req.body.password;
 
@@ -66,6 +76,16 @@ app.post('/api/user/register', (req, res) =>
 
 app.post('/api/user/login', (req, res) =>
 {
+    const authHeader = req.headers;
+    const token = authHeader.cookie;
+
+    if (!token)
+    {
+        res
+        .redirect('/')
+        .end();
+    }
+
     const username = req.body.username;
     const password = req.body.password;
 
