@@ -128,6 +128,27 @@ app.post('/api/user/login', (req, res) =>
     }
 });
 
+app.get('/api/secret/', (req, res) =>
+{
+    const authHeader = req.headers;
+    const token = authHeader.cookie;
+
+    if (token === undefined)
+    {
+        res
+        .status(401)
+        .end();
+    }
+    else
+    {
+        res
+        .status(200)
+        .end();
+    }
+
+    res.end();
+});
+
 app.listen(PORT, () =>
 {
     console.log("Server listening on port: " + PORT);
