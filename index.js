@@ -19,6 +19,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 let users = [];
+let todos = [];
 
 app.get('/', (req, res) =>
 {
@@ -154,7 +155,7 @@ app.post('/api/user/login', (req, res) =>
     }
 });
 
-app.get('/api/secret/', (req, res) =>
+app.get('/api/secret', (req, res) =>
 {
     const authHeader = req.headers;
     const token = authHeader.cookie;
@@ -173,6 +174,44 @@ app.get('/api/secret/', (req, res) =>
     }
 
     res.end();
+});
+
+app.post('/api/todos', (req, res) =>
+{
+    const newTodo = req.body.todo;
+    const token = req.headers.cookie.split("=")[1];
+    const user = jwt.verify(token, process.env.SECRET);
+    const id = user.id;
+    let userFound = false;
+
+    todos.forEach((todo) =>
+    {
+        if (todo["id"] === id)
+        {
+            todo.todos.push(newTodo);
+            userFound = true;
+
+            res.send(todo);
+        }
+    });
+
+    if (userFound === false)
+    {
+        const newEntry =
+        {
+            "id": id,
+            "todos" : [newTodo]
+        }
+
+        todos.push(newEntry);
+
+        res.send(newEntry);
+    }
+});
+
+app.get('/api/todos/list', (req, res) =>
+{
+    res.send(todos);
 });
 
 app.listen(PORT, () =>
