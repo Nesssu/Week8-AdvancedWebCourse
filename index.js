@@ -187,7 +187,16 @@ app.post('/api/todos', (req, res) =>
     }
     else
     {
-        const user = jwt.verify(token, process.env.SECRET);
+        let user;
+        try
+        {
+            user = jwt.verify(token, process.env.SECRET);
+        }
+        catch (e)
+        {
+            return res.status(401).end()
+        }
+    
         const id = user.id;
         let userFound = false;
 
