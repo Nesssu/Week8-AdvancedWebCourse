@@ -179,7 +179,7 @@ app.get('/api/secret', (req, res) =>
 app.post('/api/todos', (req, res) =>
 {
     const newTodo = req.body.todo;
-    const token = req.headers.cookie.split("=")[1];
+    let token = req.headers.cookie;
 
     if (!token)
     {
@@ -187,6 +187,7 @@ app.post('/api/todos', (req, res) =>
     }
     else
     {
+        token = token.split("=")[1];
         let user;
         try
         {
