@@ -180,32 +180,40 @@ app.post('/api/todos', (req, res) =>
 {
     const newTodo = req.body.todo;
     const token = req.headers.cookie.split("=")[1];
-    const user = jwt.verify(token, process.env.SECRET);
-    const id = user.id;
-    let userFound = false;
 
-    todos.forEach((todo) =>
+    if (!token)
     {
-        if (todo["id"] === id)
-        {
-            todo.todos.push(newTodo);
-            userFound = true;
-
-            res.send(todo);
-        }
-    });
-
-    if (userFound === false)
+        res.sendStatus(401);
+    }
+    else
     {
-        const newEntry =
+        const user = jwt.verify(token, process.env.SECRET);
+        const id = user.id;
+        let userFound = false;
+
+        todos.forEach((todo) =>
         {
-            "id": id,
-            "todos" : [newTodo]
+            if (todo["id"] === id)
+            {
+                todo.todos.push(newTodo);
+                userFound = true;
+
+                res.send(todo);
+            }
+        });
+
+        if (userFound === false)
+        {
+            const newEntry =
+            {
+                "id": id,
+                "todos" : [newTodo]
+            }
+
+            todos.push(newEntry);
+
+            res.send(newEntry);
         }
-
-        todos.push(newEntry);
-
-        res.send(newEntry);
     }
 });
 
